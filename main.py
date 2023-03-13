@@ -88,7 +88,7 @@ def initial_selenium(url: str, path_file: str):
     options = Options()
     options.add_argument('--disable-gpu')
     options.add_argument('--headless')
-    options.add_argument("--ignore-certificate-errors")
+    # options.add_argument("--ignore-certificate-errors")
 
     driver = get_driver()
     # Create the webdriver object and pass the arguments
