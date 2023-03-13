@@ -67,7 +67,7 @@ st.info("Crawl all images of any website", icon="🚨")
 #     return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=Options)
 
 def initial_selenium(url: str, path_file: str):
-    @st.experimental_singleton
+    @st.experimental_memo 
     def get_driver():
         return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     # options = uc.ChromeOptions()
