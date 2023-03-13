@@ -3,6 +3,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+import undetected_chromedriver as uc
 import time
 import json
 from urllib.request import urlretrieve
@@ -15,75 +16,75 @@ import streamlit as st
 # def get_driver(options):
     # return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
-import undetected_chromedriver as uc
 
-def initial_selenium(url: str, path_file: str):
-    # options = uc.ChromeOptions()
-    # desired_capabilities = DesiredCapabilities.CHROME
-    # desired_capabilities["goog:loggingPrefs"] = {"performance": "ALL"}
-    # options.headless=True
-    # options.add_argument('--headless')
-    # options.add_argument('headless')
+
+# def initial_selenium(url: str, path_file: str):
+#     # options = uc.ChromeOptions()
+#     # desired_capabilities = DesiredCapabilities.CHROME
+#     # desired_capabilities["goog:loggingPrefs"] = {"performance": "ALL"}
+#     # options.headless=True
+#     # options.add_argument('--headless')
+#     # options.add_argument('headless')
   
-    # # Ignores any certificate errors if there is any
-    # options.add_argument("--ignore-certificate-errors")
-    # driver = uc.Chrome(options=options)
+#     # # Ignores any certificate errors if there is any
+#     # options.add_argument("--ignore-certificate-errors")
+#     # driver = uc.Chrome(options=options)
    
 
-    desired_capabilities = DesiredCapabilities.CHROME
-    desired_capabilities["goog:loggingPrefs"] = {"performance": "ALL"}
+#     desired_capabilities = DesiredCapabilities.CHROME
+#     desired_capabilities["goog:loggingPrefs"] = {"performance": "ALL"}
   
-    # Create the webdriver object and pass the arguments
-    options = webdriver.ChromeOptions()
+#     # Create the webdriver object and pass the arguments
+#     options = webdriver.ChromeOptions()
   
-    # Chrome will start in Headless mode
-    options.add_argument('headless')
+#     # Chrome will start in Headless mode
+#     options.add_argument('headless')
   
-    # Ignores any certificate errors if there is any
-    options.add_argument("--ignore-certificate-errors")
+#     # Ignores any certificate errors if there is any
+#     options.add_argument("--ignore-certificate-errors")
   
-    # Startup the chrome webdriver with executable path and
-    # pass the chrome options and desired capabilities as
-    # parameters.
-    # driver = webdriver.Chrome(chrome_options=options)
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-    # driver = get_driver(options)
+#     # Startup the chrome webdriver with executable path and
+#     # pass the chrome options and desired capabilities as
+#     # parameters.
+#     # driver = webdriver.Chrome(chrome_options=options)
+#     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+#     # driver = get_driver(options)
     
   
-    # Send a request to the website and let it load
-    driver.get(url)
+#     # Send a request to the website and let it load
+#     driver.get(url)
   
-    # Sleeps for 10 seconds
-    time.sleep(10)
+#     # Sleeps for 10 seconds
+#     time.sleep(10)
   
-    # Gets all the logs from performance in Chrome
-    logs = driver.get_log("performance")
+#     # Gets all the logs from performance in Chrome
+#     logs = driver.get_log("performance")
     
-    print(path_file)
-    # Opens a writable JSON file and writes the logs in it
-    with open("{path}/network_log.json".format(path=path_file), "w", encoding="utf-8") as f:
-        print("json is writing")
-        f.write("[")
+#     print(path_file)
+#     # Opens a writable JSON file and writes the logs in it
+#     with open("{path}/network_log.json".format(path=path_file), "w", encoding="utf-8") as f:
+#         print("json is writing")
+#         f.write("[")
   
-        # Iterates every logs and parses it using JSON
-        for log in logs:
-            network_log = json.loads(log["message"])["message"]
+#         # Iterates every logs and parses it using JSON
+#         for log in logs:
+#             network_log = json.loads(log["message"])["message"]
   
-            # Checks if the current 'method' key has any
-            # Network related value.
-            if("Network.response" in network_log["method"]
-                    or "Network.request" in network_log["method"]
-                    or "Network.webSocket" in network_log["method"]):
+#             # Checks if the current 'method' key has any
+#             # Network related value.
+#             if("Network.response" in network_log["method"]
+#                     or "Network.request" in network_log["method"]
+#                     or "Network.webSocket" in network_log["method"]):
   
-                # Writes the network log to a JSON file by
-                # converting the dictionary to a JSON string
-                # using json.dumps().
-                f.write(json.dumps(network_log)+",")
-        f.write("{}]")
+#                 # Writes the network log to a JSON file by
+#                 # converting the dictionary to a JSON string
+#                 # using json.dumps().
+#                 f.write(json.dumps(network_log)+",")
+#         f.write("{}]")
   
-    print("Quitting Selenium WebDriver")
-    driver.quit()
-    return True
+#     print("Quitting Selenium WebDriver")
+#     driver.quit()
+#     return True
 
 
 def selenium_read_img_in_json(path_file: str):

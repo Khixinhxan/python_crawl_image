@@ -6,11 +6,19 @@ from pytz import timezone
 from datetime import datetime, timedelta
 import pandas as pd
 import numpy as np
+import json
 #when we import hydralit, we automatically get all of Streamlit
 import hydralit as hy
 from source.process_data import check_url_is_valid
-from source.crawl_with_selenium import initial_selenium, selenium_read_img_in_json, selenium_save_image_list, delete_all_images_file, save_selenium_dataframe
+from source.crawl_with_selenium import selenium_read_img_in_json, selenium_save_image_list, delete_all_images_file, save_selenium_dataframe
 from source.crawl_with_beautiful import initial_beautiful_soup, beautiful_save_image_list, beautiful_dataframe
+
+from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+import undetected_chromedriver as uc
 
 path = os.getcwd()
 print(path)
@@ -54,6 +62,107 @@ st.set_page_config(
 app = hy.HydraApp(title='Crawl all images of any website')
 st.title('Crawl all images of any website')
 st.info("Crawl all images of any website", icon="🚨")
+
+@st.experimental_singleton
+def get_driver():
+    return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
+def initial_selenium(url: str, path_file: str):
+    # options = uc.ChromeOptions()
+    # desired_capabilities = DesiredCapabilities.CHROME
+    # desired_capabilities["goog:loggingPrefs"] = {"performance": "ALL"}
+    # options.headless=True
+    # options.add_argument('--headless')
+    # options.add_argument('headless')
+  
+    # # Ignores any certificate errors if there is any
+    # options.add_argument("--ignore-certificate-errors")
+    # driver = uc.Chrome(options=options)
+   
+
+    desired_capabilities = DesiredCapabilities.CHROME
+    desired_capabilities["goog:loggingPrefs"] = {"performance": "ALL"}
+  
+    # Create the webdriver object and pass the arguments
+    options = webdriver.ChromeOptions()
+  
+    # Chrome will start in Headless mode
+    options.add_argument('headless')
+  
+    # Ignores any certificate errors if there is any
+    options.add_argument("--ignore-certificate-errors")
+  
+    # Startup the chrome webdriver with executable path and
+    # pass the chrome options and desired capabilities as
+    # parameters.
+    # driver = webdriver.Chrome(chrome_options=options)
+
+    driver = get_driver()
+    
+  
+    # Send a request to the website and let it load
+    driver.get(url)
+  
+    # Sleeps for 10 seconds
+    time.sleep(10)
+  
+    # Gets all the logs from performance in Chrome
+    logs = driver.get_log("performance")
+    
+    print(path_file)
+    # Opens a writable JSON file and writes the logs in it
+    with open("{path}/network_log.json".format(path=path_file), "w", encoding="utf-8") as f:
+        print("json is writing")
+        f.write("[")
+  
+        # Iterates every logs and parses it using JSON
+        for log in logs:
+            network_log = json.loads(log["message"])["message"]
+  
+            # Checks if the current 'method' key has any
+            # Network related value.
+            if("Network.response" in network_log["method"]
+                    or "Network.request" in network_log["method"]
+                    or "Network.webSocket" in network_log["method"]):
+  
+                # Writes the network log to a JSON file by
+                # converting the dictionary to a JSON string
+                # using json.dumps().
+                f.write(json.dumps(network_log)+",")
+        f.write("{}]")
+  
+    print("Quitting Selenium WebDriver")
+    driver.quit()
+    return True
+
+
+def selenium_read_img_in_json(path_file: str):
+    # Read the JSON File and parse it using
+    # json.loads() to find the urls containing images.
+
+    json_file_path = "{path}/network_log.json".format(path=path_file)
+    with open(json_file_path, "r", encoding="utf-8") as f:
+        logs = json.loads(f.read())
+  
+    # Iterate the logs
+    images_url = []
+    for log in logs:
+  
+        # Except block will be accessed if any of the
+        # following keys are missing.
+        try:
+            # URL is present inside the following keys
+            url = log["params"]["request"]["url"]
+  
+            # Checks if the extension is .png or .jpg
+            if url[len(url)-4:] == ".png" or url[len(url)-4:] == ".jpg" or url[len(url)-4:] == ".svg" :
+                print(url, end='\n\n')
+                images_url.append(url)
+        except Exception as e:
+            pass
+
+    return images_url
+
 
 @st.cache
 def convert_df(df):
