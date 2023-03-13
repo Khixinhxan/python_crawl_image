@@ -1,41 +1,52 @@
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 import time
 import json
 from urllib.request import urlretrieve
 import os, shutil
 import pandas as pd
+
+import streamlit as st
+
+@st.experimental_singleton
+def get_driver(options):
+    return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
 import undetected_chromedriver as uc
 
 def initial_selenium(url: str, path_file: str):
-    options = uc.ChromeOptions()
-    desired_capabilities = DesiredCapabilities.CHROME
-    desired_capabilities["goog:loggingPrefs"] = {"performance": "ALL"}
-    options.headless=True
-    options.add_argument('--headless')
-    options.add_argument('headless')
-  
-    # Ignores any certificate errors if there is any
-    options.add_argument("--ignore-certificate-errors")
-    driver = uc.Chrome(options=options)
-   
-
+    # options = uc.ChromeOptions()
     # desired_capabilities = DesiredCapabilities.CHROME
     # desired_capabilities["goog:loggingPrefs"] = {"performance": "ALL"}
-  
-    # # Create the webdriver object and pass the arguments
-    # options = webdriver.ChromeOptions()
-  
-    # # Chrome will start in Headless mode
+    # options.headless=True
+    # options.add_argument('--headless')
     # options.add_argument('headless')
   
     # # Ignores any certificate errors if there is any
     # options.add_argument("--ignore-certificate-errors")
+    # driver = uc.Chrome(options=options)
+   
+
+    desired_capabilities = DesiredCapabilities.CHROME
+    desired_capabilities["goog:loggingPrefs"] = {"performance": "ALL"}
   
-    # # Startup the chrome webdriver with executable path and
-    # # pass the chrome options and desired capabilities as
-    # # parameters.
+    # Create the webdriver object and pass the arguments
+    options = webdriver.ChromeOptions()
+  
+    # Chrome will start in Headless mode
+    options.add_argument('headless')
+  
+    # Ignores any certificate errors if there is any
+    options.add_argument("--ignore-certificate-errors")
+  
+    # Startup the chrome webdriver with executable path and
+    # pass the chrome options and desired capabilities as
+    # parameters.
     # driver = webdriver.Chrome(chrome_options=options)
+    driver = get_driver(options)
     
   
     # Send a request to the website and let it load
