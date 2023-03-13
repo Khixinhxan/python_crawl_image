@@ -65,11 +65,16 @@ st.info("Crawl all images of any website", icon="🚨")
 # @st.experimental_singleton
 # def get_driver():
 #     return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=Options)
+@st.experimental_singleton
+def installff():
+  os.system('sbase install geckodriver')
+  os.system('ln -s /home/appuser/venv/lib/python3.9/site-packages/seleniumbase/drivers/geckodriver /home/appuser/venv/bin/geckodriver')
+
 
 def initial_selenium(url: str, path_file: str):
-    @st.experimental_memo 
-    def get_driver():
-        return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    # @st.experimental_memo 
+    # def get_driver():
+    #     return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     # options = uc.ChromeOptions()
     # desired_capabilities = DesiredCapabilities.CHROME
     # desired_capabilities["goog:loggingPrefs"] = {"performance": "ALL"}
@@ -82,15 +87,27 @@ def initial_selenium(url: str, path_file: str):
     # driver = uc.Chrome(options=options)
    
 
-    desired_capabilities = DesiredCapabilities.CHROME
+    # desired_capabilities = DesiredCapabilities.CHROME
+    # desired_capabilities["goog:loggingPrefs"] = {"performance": "ALL"}
+  
+    # options = Options()
+    # options.add_argument('--disable-gpu')
+    # options.add_argument('--headless')
+    # # options.add_argument("--ignore-certificate-errors")
+
+    # driver = get_driver()
+    desired_capabilities = DesiredCapabilities.FIREFOX
     desired_capabilities["goog:loggingPrefs"] = {"performance": "ALL"}
   
-    options = Options()
-    options.add_argument('--disable-gpu')
-    options.add_argument('--headless')
-    # options.add_argument("--ignore-certificate-errors")
+    _ = installff()
+    from selenium import webdriver
+    from selenium.webdriver import FirefoxOptions
+    opts = FirefoxOptions()
+    opts.add_argument("--headless")
+    opts.add_argument('--disable-gpu')
+    opts.add_argument("--ignore-certificate-errors")
+    driver = webdriver.Firefox(options=opts)
 
-    driver = get_driver()
     # Create the webdriver object and pass the arguments
     # options = webdriver.ChromeOptions()
   
