@@ -5,3 +5,4 @@ streamlit==1.15.1
 hydralit==1.0.14
 bs4==0.0.1
 undetected_chromedriver==3.4.6
+seleniumbase==4.13.13
