@@ -63,9 +63,9 @@ app = hy.HydraApp(title='Crawl all images of any website')
 st.title('Crawl all images of any website')
 st.info("Crawl all images of any website", icon="🚨")
 
-@st.experimental_singleton
-def get_driver():
-    return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+# @st.experimental_singleton
+# def get_driver():
+#     return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=Options)
 
 def initial_selenium(url: str, path_file: str):
     # options = uc.ChromeOptions()
@@ -96,8 +96,8 @@ def initial_selenium(url: str, path_file: str):
     # pass the chrome options and desired capabilities as
     # parameters.
     # driver = webdriver.Chrome(chrome_options=options)
-
-    driver = get_driver()
+    driver= webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    # driver = get_driver()
     
   
     # Send a request to the website and let it load
