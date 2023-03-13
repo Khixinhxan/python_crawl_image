@@ -3,7 +3,7 @@ import os
 import streamlit as st
 import time
 from pytz import timezone 
-from datetime import datetime, timedelta
+from datetime import datetime
 import pandas as pd
 import numpy as np
 import json
@@ -18,7 +18,6 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
-import undetected_chromedriver as uc
 
 path = os.getcwd()
 print(path)
