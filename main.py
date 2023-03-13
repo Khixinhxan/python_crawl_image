@@ -13,11 +13,21 @@ from source.process_data import check_url_is_valid
 from source.crawl_with_selenium import selenium_read_img_in_json, selenium_save_image_list, delete_all_images_file, save_selenium_dataframe
 from source.crawl_with_beautiful import initial_beautiful_soup, beautiful_save_image_list, beautiful_dataframe
 
-from selenium import webdriver
+
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
+# from selenium import webdriver
+# from selenium.webdriver.chrome.options import Options
+# from selenium.webdriver.chrome.service import Service
+# from webdriver_manager.chrome import ChromeDriverManager
+
+from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+from webdriver_manager.firefox import GeckoDriverManager
 
 path = os.getcwd()
 print(path)
@@ -65,10 +75,14 @@ st.info("Crawl all images of any website", icon="🚨")
 # @st.experimental_singleton
 # def get_driver():
 #     return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=Options)
-@st.experimental_singleton
-def installff():
-  os.system('sbase install geckodriver')
-  os.system('ln -s /home/appuser/venv/lib/python3.9/site-packages/seleniumbase/drivers/geckodriver /home/appuser/venv/bin/geckodriver')
+# @st.experimental_singleton
+# def installff():
+#   os.system('sbase install geckodriver')
+#   os.system('ln -s /home/appuser/venv/lib/python3.9/site-packages/seleniumbase/drivers/geckodriver /home/appuser/venv/bin/geckodriver')
+
+URL = ""
+TIMEOUT = 20
+
 
 
 def initial_selenium(url: str, path_file: str):
@@ -99,14 +113,17 @@ def initial_selenium(url: str, path_file: str):
     desired_capabilities = DesiredCapabilities.FIREFOX
     desired_capabilities["goog:loggingPrefs"] = {"performance": "ALL"}
   
-    _ = installff()
-    from selenium import webdriver
-    from selenium.webdriver import FirefoxOptions
-    opts = FirefoxOptions()
-    opts.add_argument("--headless")
-    opts.add_argument('--disable-gpu')
-    opts.add_argument("--ignore-certificate-errors")
-    driver = webdriver.Firefox(options=opts)
+    st.title("Test Selenium")
+
+    firefoxOptions = Options()
+    firefoxOptions.add_argument("--headless")
+    firefoxOptions.add_argument('--disable-gpu')
+    firefoxOptions.add_argument("--ignore-certificate-errors")
+    service = Service(GeckoDriverManager().install())
+    driver = webdriver.Firefox(
+        options=firefoxOptions,
+        service=service,
+    )
 
     # Create the webdriver object and pass the arguments
     # options = webdriver.ChromeOptions()
