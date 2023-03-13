@@ -5,26 +5,38 @@ import json
 from urllib.request import urlretrieve
 import os, shutil
 import pandas as pd
+import undetected_chromedriver as uc
 
 def initial_selenium(url: str, path_file: str):
-    print(1)
-
+    options = uc.ChromeOptions()
     desired_capabilities = DesiredCapabilities.CHROME
     desired_capabilities["goog:loggingPrefs"] = {"performance": "ALL"}
-  
-    # Create the webdriver object and pass the arguments
-    options = webdriver.ChromeOptions()
-  
-    # Chrome will start in Headless mode
+    options.headless=True
+    options.add_argument('--headless')
     options.add_argument('headless')
   
     # Ignores any certificate errors if there is any
     options.add_argument("--ignore-certificate-errors")
+    driver = uc.Chrome(options=options)
+   
+
+    # desired_capabilities = DesiredCapabilities.CHROME
+    # desired_capabilities["goog:loggingPrefs"] = {"performance": "ALL"}
   
-    # Startup the chrome webdriver with executable path and
-    # pass the chrome options and desired capabilities as
-    # parameters.
-    driver = webdriver.Chrome(chrome_options=options)
+    # # Create the webdriver object and pass the arguments
+    # options = webdriver.ChromeOptions()
+  
+    # # Chrome will start in Headless mode
+    # options.add_argument('headless')
+  
+    # # Ignores any certificate errors if there is any
+    # options.add_argument("--ignore-certificate-errors")
+  
+    # # Startup the chrome webdriver with executable path and
+    # # pass the chrome options and desired capabilities as
+    # # parameters.
+    # driver = webdriver.Chrome(chrome_options=options)
+    
   
     # Send a request to the website and let it load
     driver.get(url)
