@@ -67,6 +67,9 @@ st.info("Crawl all images of any website", icon="🚨")
 #     return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=Options)
 
 def initial_selenium(url: str, path_file: str):
+    @st.experimental_singleton
+    def get_driver():
+        return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     # options = uc.ChromeOptions()
     # desired_capabilities = DesiredCapabilities.CHROME
     # desired_capabilities["goog:loggingPrefs"] = {"performance": "ALL"}
@@ -82,21 +85,27 @@ def initial_selenium(url: str, path_file: str):
     desired_capabilities = DesiredCapabilities.CHROME
     desired_capabilities["goog:loggingPrefs"] = {"performance": "ALL"}
   
-    # Create the webdriver object and pass the arguments
-    options = webdriver.ChromeOptions()
-  
-    # Chrome will start in Headless mode
-    options.add_argument('headless')
-  
-    # Ignores any certificate errors if there is any
+    options = Options()
+    options.add_argument('--disable-gpu')
+    options.add_argument('--headless')
     options.add_argument("--ignore-certificate-errors")
+
+    driver = get_driver()
+    # Create the webdriver object and pass the arguments
+    # options = webdriver.ChromeOptions()
   
-    # Startup the chrome webdriver with executable path and
-    # pass the chrome options and desired capabilities as
-    # parameters.
-    # driver = webdriver.Chrome(chrome_options=options)
-    driver= webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-    # driver = get_driver()
+    # # Chrome will start in Headless mode
+    # options.add_argument('headless')
+  
+    # # Ignores any certificate errors if there is any
+    # options.add_argument("--ignore-certificate-errors")
+  
+    # # Startup the chrome webdriver with executable path and
+    # # pass the chrome options and desired capabilities as
+    # # parameters.
+    # # driver = webdriver.Chrome(chrome_options=options)
+    # driver= webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    # # driver = get_driver()
     
   
     # Send a request to the website and let it load
