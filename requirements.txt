@@ -1,6 +1,6 @@
 streamlit==1.15.1
-seleniumbase==4.13.13
-webdriver-manager==3.8.5
+seleniumbase
+webdriver-manager
 pandas==1.5.2
 hydralit==1.0.14
 bs4==0.0.1
