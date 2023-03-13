@@ -11,9 +11,9 @@ import pandas as pd
 
 import streamlit as st
 
-@st.experimental_singleton
-def get_driver(options):
-    return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+# @st.experimental_singleton
+# def get_driver(options):
+    # return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 import undetected_chromedriver as uc
 
@@ -46,7 +46,8 @@ def initial_selenium(url: str, path_file: str):
     # pass the chrome options and desired capabilities as
     # parameters.
     # driver = webdriver.Chrome(chrome_options=options)
-    driver = get_driver(options)
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    # driver = get_driver(options)
     
   
     # Send a request to the website and let it load
