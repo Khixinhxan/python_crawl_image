@@ -117,7 +117,7 @@ def initial_selenium(url: str, path_file: str):
 
     firefoxOptions = Options()
     firefoxOptions.add_argument("--headless")
-    firefoxOptions.add_argument('--disable-gpu')
+    # firefoxOptions.add_argument('--disable-gpu')
     # firefoxOptions.add_argument("--ignore-certificate-errors")
     service = Service(GeckoDriverManager().install())
     driver = webdriver.Firefox(
